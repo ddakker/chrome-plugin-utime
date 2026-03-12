@@ -21,6 +21,10 @@ Utime.prototype = {
         var output = '',
             date;
 
+        if(typeof input === 'string') {
+            input = input.trim();
+        }
+
         if(!input || input === '') {
             return output;
         }
@@ -48,6 +52,10 @@ Utime.prototype = {
         var output = '';
         var date;
 
+        if(typeof input === 'string') {
+            input = input.trim();
+        }
+
         if(!input || input === '') {
             return output;
         }
@@ -69,14 +77,9 @@ Utime.prototype = {
                 date = this.applyTimezoneOffset(date, this.getOption('timezoneOffset'));
             }
 
-            output = date.toString(this.getOption('dateOutputFormat'));
-            
-            if(this.getOption('timeOutputFormat') != 'none' && 
-                this.getOption('dateOutputFormat') != 'yyyy-MM-ddTHH:mm:ss') {
-                output += ' ' + date.toString(this.getOption('timeOutputFormat'));
-            }
+            output = this.formatDate(date);
         }
-        
+
         return output;
     },
 
@@ -98,12 +101,7 @@ Utime.prototype = {
             date = this.applyTimezoneOffset(date, this.getOption('timezoneOffset'));
         }
 
-        var output = date.toString(this.getOption('dateOutputFormat'));
-
-        if(this.getOption('timeOutputFormat') != 'none' &&
-            this.getOption('dateOutputFormat') != 'yyyy-MM-ddTHH:mm:ss') {
-            output += ' ' + date.toString(this.getOption('timeOutputFormat'));
-        }
+        var output = this.formatDate(date);
 
         return output;
     },
@@ -112,6 +110,11 @@ Utime.prototype = {
         var output = false;
         var tsRegex = /^-?[0-9]+$/;
         var tidRegex = /^[0-9a-f]+-[0-9a-f]+$/i;
+
+        if(typeof input === 'string') {
+            input = input.trim();
+        }
+
         var isTimestamp = (typeof input === 'string' && tsRegex.test(input));
 
         if(typeof input === 'string' && tidRegex.test(input)) {
@@ -124,6 +127,29 @@ Utime.prototype = {
 
         if(output === false && isTimestamp) {
             output = this.convertTimestamp(input);
+        }
+
+        return output;
+    },
+
+    isIsoFormat: function(fmt) {
+        return fmt === 'yyyy-MM-ddTHH:mm:ss' || fmt === 'yyyy-MM-ddTHH:mm:ss.SSS';
+    },
+
+    formatDate: function(date) {
+        var fmt = this.getOption('dateOutputFormat');
+        var output;
+
+        if(fmt === 'yyyy-MM-ddTHH:mm:ss.SSS') {
+            output = date.toString('yyyy-MM-ddTHH:mm:ss');
+            var ms = date.getMilliseconds();
+            output += '.' + ('00' + ms).slice(-3);
+        } else {
+            output = date.toString(fmt);
+        }
+
+        if(this.getOption('timeOutputFormat') != 'none' && !this.isIsoFormat(fmt)) {
+            output += ' ' + date.toString(this.getOption('timeOutputFormat'));
         }
 
         return output;

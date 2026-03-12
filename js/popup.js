@@ -225,6 +225,7 @@ var extPopup = (function() {
 
             if(target === 'top') {
                 topValue = $.trim(topInput.val());
+                topInput.val(topValue);
                 if(forceUpdate === true || topValue != this.inputGroups[groupIndex].topValue) {
                     bottomValue = this.convertValue(topValue, 'top');
                     bottomInput.val(this.getDisplayedValue(bottomValue, 'bottom'));
@@ -235,6 +236,7 @@ var extPopup = (function() {
                 }
             } else {
                 bottomValue = $.trim(bottomInput.val());
+                bottomInput.val(bottomValue);
                 if(forceUpdate === true || bottomValue != this.inputGroups[groupIndex].bottomValue) {
                     topValue = this.convertValue(bottomValue, 'bottom');
                     topInput.val(this.getDisplayedValue(topValue, 'top'));

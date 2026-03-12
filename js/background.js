@@ -14,12 +14,14 @@ const extBgPage = (function() {
         init: function() {
             this.utime = new Utime();
 
-            //context/right-click menu
-            this.cxtMenu = chrome.contextMenus.create({
-                type: 'normal',
-                id: 'utime-context-convert',
-                title: 'Convert with Utime',
-                contexts: ['selection'],
+            //context/right-click menu - only create on install/update to avoid duplicate ID error
+            chrome.runtime.onInstalled.addListener(() => {
+                chrome.contextMenus.create({
+                    type: 'normal',
+                    id: 'utime-context-convert',
+                    title: 'Convert with Utime',
+                    contexts: ['selection'],
+                });
             });
 
             chrome.contextMenus.onClicked.addListener(this.handleContextMenuClick.bind(this));
