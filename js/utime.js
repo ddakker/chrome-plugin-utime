@@ -80,12 +80,45 @@ Utime.prototype = {
         return output;
     },
 
+    convertTransactionId: function(input) {
+        var parts = input.split('-');
+        var time = parseInt(parts[0], 16);
+
+        if(isNaN(time)) {
+            return false;
+        }
+
+        var date = new Date(time);
+
+        if(isNaN(date.getTime())) {
+            return false;
+        }
+
+        if(this.getOption('timezoneOffset') !== 'local') {
+            date = this.applyTimezoneOffset(date, this.getOption('timezoneOffset'));
+        }
+
+        var output = date.toString(this.getOption('dateOutputFormat'));
+
+        if(this.getOption('timeOutputFormat') != 'none' &&
+            this.getOption('dateOutputFormat') != 'yyyy-MM-ddTHH:mm:ss') {
+            output += ' ' + date.toString(this.getOption('timeOutputFormat'));
+        }
+
+        return output;
+    },
+
     convertInput: function(input) {
         var output = false;
         var tsRegex = /^-?[0-9]+$/;
+        var tidRegex = /^[0-9a-f]+-[0-9a-f]+$/i;
         var isTimestamp = (typeof input === 'string' && tsRegex.test(input));
 
-        if(!isTimestamp) {
+        if(typeof input === 'string' && tidRegex.test(input)) {
+            output = this.convertTransactionId(input);
+        }
+
+        if(output === false && !isTimestamp) {
             output = this.convertDate(input);
         }
 
