@@ -425,7 +425,7 @@ var extPopup = (function() {
 
             switch(mode) {
                 case 'auto':
-                    text = (position === 'top') ? 'Enter a timestamp or date...' : '';
+                    text = (position === 'top') ? 'Enter a timestamp, date, or TID...' : '';
                     break;
                 case 'timestamp-date':
                     text = (position === 'top') ? 'Enter a timestamp...' : 'Enter a date...';
