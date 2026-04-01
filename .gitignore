@@ -1,7 +1,10 @@
 # node
 node_modules/
 
-# sublime text
+# IDE
+.idea/
+.vscode/
+*.iml
 *.sublime-workspace
 *.sublime-project
 
@@ -11,3 +14,8 @@ node_modules/
 .LSOverride
 Icon
 
+# build output
+dist/
+
+# releases
+releases/
